@@ -129,7 +129,7 @@ p <- ggplot(data=titanium, aes(x = Names, y = Values, fill = Semester)) +
   ggtitle("Titanium Appointments") 
 
 ggplotly(p) %>%
-  layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+  layout(legend = list(orientation = "h", x = 0.35, y = -0.2))
 ```
 
 ### Grief Card & Packages
@@ -142,14 +142,14 @@ l <- list(
     size = 13,
     color = "#000"),
   orientation = 'h', 
-  x = 0.27, 
+  x = 0.35, 
   y = -0.15)
         
 p <- plot_ly(data = grief, labels = ~Semester, values = ~Values, type = 'pie',
             marker = list(colors = colors,
                       line = list(color = '#FFFFFF', width = 1))) %>%
         layout(title = list(text = "<b>Grief Cards & Packages</b>"),
-               font = list(color = "#B9975B", x = 0.5, y = -0.15),
+               font = list(color = "#B9975B"),
                xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
                yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
                legend = l)
