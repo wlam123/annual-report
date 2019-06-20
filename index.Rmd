@@ -1,0 +1,161 @@
+---
+title: "2018-19 Annual Report Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: rows
+    vertical_layout: scroll
+---
+<style>                     
+.navbar {
+  background-color:#115740;
+  border-color:#B9975B;
+}
+.navbar-brand {
+color:white!important;
+}
+</style>
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(ggplot2)
+library(dplyr)
+library(plotly)
+
+mrc <- data.frame("Year" = c("2015-16", "2016-17", "2017-18", "2018-19"), "Total" = c(225, 461, 471, 230))
+
+# are care reports numbers based on all care reports or just the ones assigned to css staff
+care <- data.frame("Year" = c("2013", "2014", "2015", "2016", "2017", "2018", "2019"), "Total" = c(474, 488, 1106, 1273, 1852, 1962, 477))
+
+well <- data.frame("Year" = c("2015-16", "2016-17", "2017-18", "2018-19"), "Total" = c(78, 99 , 167, 1))
+
+# 1 from summer inclued in fall numbers
+pep <- data.frame(Semester = rep(c("Fall", "Spring"), each = 4), 
+                  Year = c("2015-16", "2016-17", "2017-18",         "2018-19"),
+                 Values = c(50, 100, 40, 80, 60, 120, 33, 32))
+
+titanium <- data.frame("Semester" = rep(c("Fall", "Spring"), each = 3),
+                       "Names" = c("Rachel", "Amelia", "Wilson"), 
+                       "Values" = c(63, 75, 32, 122, 101, 38))
+
+grief <- data.frame("Semester" = c("Fall", "Spring"),
+                    "Type" = rep(c("Letters", "Package"), each = 2),
+                    "Values" = c(18, 8, 3, 4))
+```
+
+Overview
+===============================
+
+Row{data-height=350}
+-----------------------------
+
+### MRC Petitions 
+```{r}
+p <- ggplot(data=mrc, aes(x = Year, y = Total, fill = Year)) + 
+  geom_bar(stat="identity", position = "dodge") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#115740","#B9975B","#D0D3D4","#F0B323")) +
+  theme(axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face = "bold", colour = "#B9975B")) +
+  ggtitle("MRC Petitions") 
+
+ggplotly(p)
+```
+
+### Care Reports
+```{r}
+p <- ggplot(data=care, aes(x = Year, y = Total, fill = Year)) + 
+  geom_bar(stat="identity", position = "dodge") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#115740","#B9975B","#D0D3D4","#F0B323","#CAB64B","#183028","#00313C")) +
+  theme(axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face = "bold", colour = "#B9975B")) +
+  ggtitle("Care Reports") 
+
+ggplotly(p)
+```
+
+Row{data-height=350}
+-----------------------------
+
+### Wellness Agreements
+```{r}
+p <- ggplot(data=well, aes(x = Year, y = Total, fill = Year)) + 
+  geom_bar(stat="identity", position = "dodge") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#115740","#B9975B","#D0D3D4","#F0B323")) +
+  theme(axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face = "bold", colour = "#B9975B")) +
+  ggtitle("Wellness Agreements") 
+
+ggplotly(p)
+```
+
+### PEP
+```{r}
+p <- ggplot(data=pep, aes(x = Year, y = Values, fill = Semester)) + 
+  geom_bar(stat="identity", position = "dodge") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#115740","#B9975B","#D0D3D4")) +
+  theme(axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold", colour = "#B9975B")) +
+  ggtitle("PEP") 
+
+ggplotly(p) %>%
+  layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+```
+
+Breakdown
+=================================
+
+Row{data-height=350}
+----------------------------------
+
+### Titanium Appointments
+```{r}
+p <- ggplot(data=titanium, aes(x = Names, y = Values, fill = Semester)) + 
+  geom_bar(stat="identity", position="dodge") +
+  theme_minimal() +
+  scale_fill_manual(values = c("#115740","#B9975B")) + 
+  theme(axis.title.x=element_blank(),
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.5, face = "bold", colour = "#B9975B")) +
+  ggtitle("Titanium Appointments") 
+
+ggplotly(p) %>%
+  layout(legend = list(orientation = "h", x = 0.4, y = -0.2))
+```
+
+### Grief Card & Packages
+```{r}
+colors <- c('rgb(17,87,64)', 'rgb(185,151,91)', 'rgb(208,211,212)', 'rgb(240,179,35)', 'rgb(202,182,75)')
+
+l <- list(
+  font = list(
+    family = "arial",
+    size = 13,
+    color = "#000"),
+  orientation = 'h', 
+  x = 0.27, 
+  y = -0.15)
+        
+p <- plot_ly(data = grief, labels = ~Semester, values = ~Values, type = 'pie',
+            marker = list(colors = colors,
+                      line = list(color = '#FFFFFF', width = 1))) %>%
+        layout(title = list(text = "<b>Grief Cards & Packages</b>"),
+               font = list(color = "#B9975B", x = 0.5, y = -0.15),
+               xaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+               yaxis = list(showgrid = FALSE, zeroline = FALSE, showticklabels = FALSE),
+               legend = l)
+p
+```
+
+Row
+------------------------
+
